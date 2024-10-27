@@ -1,13 +1,18 @@
 import { AppBskyFeedDefs, AppBskyFeedPost } from "@atproto/api";
-import { agent } from "./lib/api";
+import { agent } from "/home/liamp/Desktop/Programming/Projects/my-bsky-app/src/app/lib/api";
 
-const EXAMPLE_POST =
-  "at://did:plc:vwzwgnygau7ed7b7wt5ux7y2/app.bsky.feed.post/3karfx5vrvv23";
+interface Props {
+  params: {
+    handle: string;
+    rkey: string;
+  };
+}
 
-export default async function Homepage() {
-  const thread = await agent.app.bsky.feed.getPostThread({
-    uri: EXAMPLE_POST,
-  });
+export default async function PostView({ params }: Props) {
+  const uri =
+    "at://${decodeURIComponent(params.handle)}/app.bsky.feed.post/${params.rkey}";
+
+  const thread = await agent.app.bsky.feed.getPostThread({ uri });
 
   if (!AppBskyFeedDefs.isThreadViewPost(thread.data.thread))
     throw new Error("Expected a thread view post");
